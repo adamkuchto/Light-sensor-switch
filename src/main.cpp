@@ -15,7 +15,6 @@
 #include <Timers.h>
 #define ONE_WIRE_BUS 2
 #define czujnik (A1)
-
 #define led (A0)
 #define potencjometr (A2)
 OneWire oneWire(ONE_WIRE_BUS);
@@ -24,6 +23,9 @@ LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x20, 16, 2);
 //************
 unsigned long long czas = 0;  // czas z funkcji millis()
 unsigned long long uplyw = 0; // czas dodatkowy tymczas
+int pot;
+int czuj;
+int war;
 
 void setup()
 {
@@ -39,9 +41,11 @@ void setup()
 }
 void loop()
 {
-    int pot = analogRead(potencjometr);
-    int czuj = analogRead(czujnik);
-    int war =  pot + czuj; 
+
+    pot = analogRead(potencjometr);
+    czuj = analogRead(czujnik);
+    war = pot + czuj;
+
     Serial.print(war);
     Serial.print("\t");
     Serial.print(pot);
