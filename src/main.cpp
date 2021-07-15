@@ -23,9 +23,24 @@ LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x20, 16, 2);
 //************
 unsigned long long czas = 0;  // czas z funkcji millis()
 unsigned long long uplyw = 0; // czas dodatkowy tymczas
-int pot;
-int czuj;
-int war;
+int pot, czuj, war;
+/**
+ * funkcja odczytujaca dane wejsciowe 
+ * w czasie "millis"
+ */
+void odczyt()
+{
+    czas = millis();
+    const long przerwa = 1000;
+
+    if (czas - uplyw >= przerwa) // instrukcja
+    {
+        uplyw = czas;
+        pot = analogRead(potencjometr);
+        czuj = analogRead(czujnik);
+        war = pot + czuj;
+    }
+}
 
 void setup()
 {
@@ -39,18 +54,32 @@ void setup()
     pinMode(5, OUTPUT);
     pinMode(10, INPUT_PULLUP);
 }
+
+/**
+ * funkcja włączająca światło
+ */ 
+void switcher()
+{
+    if (war > 900) // tutaj ustaw! // druga zmiana 1200
+    {
+
+        digitalWrite(13, 1);
+    }
+    else
+    {
+        digitalWrite(13, 0);
+    }
+}
 void loop()
 {
-
-    pot = analogRead(potencjometr);
-    czuj = analogRead(czujnik);
-    war = pot + czuj;
-
+    odczyt();
+    switcher();
     Serial.print(war);
     Serial.print("\t");
     Serial.print(pot);
     Serial.print("\t");
     Serial.println(czuj);
+
     sensors.requestTemperatures();
     // Serial.print(sensors.getTempCByIndex(0)); //dokladnosc wyswietlania temp
     // Serial.println("C");
@@ -64,23 +93,6 @@ void loop()
     lcd.print("st. C");
     //******************
 
-    //***************
-    czas = millis();
-    const long przerwa = 1000;   // ile sekund ma czekac
-    if (czas - uplyw >= przerwa) // instrukcja
-    {
 
-        uplyw = czas;
-
-        if (war > 900) // tutaj ustaw! // druga zmiana 1200
-        {
-
-            digitalWrite(13, 1);
-        }
-        else
-        {
-            digitalWrite(13, 0);
-        }
-    }
     delay(100);
 }
