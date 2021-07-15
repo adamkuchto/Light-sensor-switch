@@ -20,7 +20,6 @@
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x20, 16, 2);
-//************
 unsigned long long czas = 0;  // czas z funkcji millis()
 unsigned long long uplyw = 0; // czas dodatkowy tymczas
 int pot, czuj, war;
